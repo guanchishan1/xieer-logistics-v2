@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="面向小微物流企业的一体化应收、应付与经营分析系统">
+  <title>运账通 · 物流财务系统</title>
+  <link rel="stylesheet" href="styles.css?v=2026072929">
+</head>
+<body>
+  <section class="account-login-screen" id="account-login-screen" aria-labelledby="account-login-title">
+    <div class="login-brand-panel">
+      <div class="login-brand-lockup"><span>运</span><div><strong>运账通</strong><small>LOGISTICS OPERATIONS</small></div></div>
+      <div class="login-brand-copy">
+        <span class="login-kicker">物流经营一体化工作台</span>
+        <h1>一张运单，串起运输、车队与财务。</h1>
+        <p>为小微物流企业设计的轻量生产系统，让每笔业务从接单到结算都有迹可循。</p>
+      </div>
+      <div class="login-feature-list">
+        <span>✓ 运单与调度协同</span><span>✓ 财务数据独立授权</span><span>✓ 本地数据安全留存</span>
+      </div>
+    </div>
+    <div class="login-form-panel">
+      <form class="account-login-card" id="account-login-form">
+        <div class="login-card-heading">
+          <span class="login-mobile-mark">运</span>
+          <p>欢迎回来</p>
+          <h2 id="account-login-title">登录运账通</h2>
+          <small>使用企业管理员账号进入工作台</small>
+        </div>
+        <label>账号邮箱<input id="account-email" name="email" type="email" autocomplete="username" placeholder="name@company.com" required></label>
+        <label>登录密码<input id="account-password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" required></label>
+        <p class="account-login-error" id="account-login-error" role="alert"></p>
+        <button class="account-login-submit" type="submit">登录工作台 <span>→</span></button>
+        <div class="demo-account-tip"><strong>本地测试账号</strong><span>admin@logistics.com</span><span>admin123456</span></div>
+      </form>
+    </div>
+  </section>
+
+  <div class="app-shell" id="app-shell" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">运</div>
+        <div>
+          <strong>运账通</strong>
+          <span>LOGISTICS FINANCE</span>
+        </div>
+      </div>
+
+      <div class="company-switcher">
+        <span class="company-avatar">榭</span>
+        <div>
+          <strong>榭尔物流</strong>
+          <span>总部 · 管理账套</span>
+        </div>
+        <button class="icon-button compact" aria-label="切换公司">⌄</button>
+      </div>
+
+      <nav class="nav-list" aria-label="主导航">
+        <p class="nav-label">经营中心</p>
+        <a href="#dashboard" class="nav-item active" data-view="dashboard"><span>▦</span>经营总览</a>
+
+        <p class="nav-label">运输业务</p>
+        <a href="#waybills" class="nav-item" data-view="waybills"><span>▣</span>运单管理</a>
+        <a href="#dispatch" class="nav-item" data-view="dispatch"><span>⌁</span>调度中心<b id="nav-dispatch-count">2</b></a>
+        <a href="#pod" class="nav-item" data-view="pod"><span>✓</span>签收回单</a>
+        <a href="#fleet" class="nav-item" data-view="fleet"><span>▰</span>车辆与车队</a>
+
+        <p class="nav-label finance-nav-label" hidden>财务专属 <span id="finance-nav-status">未授权</span></p>
+        <a href="#receivables" class="nav-item finance-restricted" data-view="receivables" hidden><span>¥</span>应收管理<b id="nav-overdue-count">3</b></a>
+        <a href="#payables" class="nav-item finance-restricted" data-view="payables" hidden><span>↗</span>应付管理</a>
+        <a href="#collections" class="nav-item finance-restricted" data-view="collections" hidden><span>↙</span>回款管理</a>
+        <a href="#payments" class="nav-item finance-restricted" data-view="payments" hidden><span>↗</span>付款管理</a>
+        <a href="#reconciliation" class="nav-item finance-restricted" data-view="reconciliation" hidden><span>≋</span>对账中心</a>
+        <a href="#costs" class="nav-item finance-restricted" data-view="costs" hidden><span>▤</span>费用管理</a>
+        <a href="#cashflow" class="nav-item finance-restricted" data-view="cashflow" hidden><span>⇄</span>资金流水</a>
+        <a href="#invoices" class="nav-item finance-restricted" data-view="invoices" hidden><span>▤</span>发票管理</a>
+        <a href="#reports" class="nav-item finance-restricted" data-view="reports" hidden><span>⌁</span>财务经营报表</a>
+
+        <p class="nav-label">业务管理</p>
+        <a href="#customers" class="nav-item" data-view="customers"><span>◎</span>客户档案</a>
+
+        <p class="nav-label">系统</p>
+        <a href="#settings" class="nav-item" data-view="settings"><span>⚙</span>系统设置</a>
+        <a href="#recycle" class="nav-item" data-view="recycle"><span>⌫</span>回收站</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="storage-row"><span>本月运单额度</span><strong>68%</strong></div>
+        <div class="progress"><i style="width:68%"></i></div>
+        <small>6,812 / 10,000 票</small>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menu-button" aria-label="打开菜单">☰</button>
+        <div class="global-search">
+          <span>⌕</span>
+          <input id="global-search" type="search" placeholder="搜索客户、运单号、账单号…">
+          <kbd>Ctrl K</kbd>
+        </div>
+        <div class="topbar-actions">
+          <button class="finance-session-button" id="finance-session-button" type="button" aria-label="登录财务中心"><span>🔐</span><strong>登录财务中心</strong></button>
+          <span class="workday" id="workday"></span>
+          <button class="icon-button" id="theme-toggle" aria-label="切换主题">◐</button>
+          <button class="icon-button notification-button" aria-label="通知">♢<i></i></button>
+          <button class="user-chip" id="user-menu-button">
+            <span>陈</span>
+            <div><strong>陈经理</strong><small>超级管理员</small></div>
+            <b>⌄</b>
+          </button>
+          <div class="account-menu" id="account-menu" hidden>
+            <div class="account-menu-profile"><span>陈</span><div><strong>陈经理</strong><small>admin@logistics.com</small></div></div>
+            <div class="account-menu-meta"><span>企业管理员</span><small>当前会话已登录</small></div>
+            <button type="button" data-action="account-logout"><span>↪</span>退出当前账号</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="content" id="content">
+        <section class="view active" id="view-dashboard" data-view-panel="dashboard">
+          <div class="page-heading heading-with-action">
+            <div>
+              <p class="eyebrow">经营总览</p>
+              <h1>早上好，陈经理</h1>
+              <p>这里是截至今天的物流经营和资金情况。</p>
+            </div>
+            <div class="heading-actions">
+              <button class="secondary-button" data-action="export-dashboard">导出日报</button>
+              <button class="primary-button" data-action="quick-create">＋ 新增业务</button>
+            </div>
+          </div>
+
+          <div class="alert-strip finance-sensitive" id="dashboard-finance-alert">
+            <span class="alert-icon">!</span>
+            <div><strong>今天有 3 笔应收即将逾期</strong><small>涉及客户欠款 ¥86,400，建议及时跟进。</small></div>
+            <button data-go="receivables">查看明细 →</button>
+          </div>
+
+          <div class="metric-grid" id="dashboard-metrics"></div>
+          <div class="finance-locked-banner" id="dashboard-finance-locked" hidden><span>🔒</span><div><strong>财务数据处于保护状态</strong><small>应收、收付款、利润和资金动态需要财务专属密钥验证后查看。</small></div><button class="secondary-button" type="button" data-action="open-finance-login">验证财务密钥</button></div>
+
+          <div class="dashboard-grid">
+            <article class="panel chart-panel finance-sensitive" id="dashboard-finance-chart">
+              <div class="panel-header">
+                <div><h2>收支趋势</h2><p>近6个月现金流变化</p></div>
+                <div class="segmented" id="chart-mode">
+                  <button class="active" data-chart-mode="cash">现金流</button>
+                  <button data-chart-mode="profit">毛利润</button>
+                </div>
+              </div>
+              <div class="chart-legend"><span><i class="blue-dot"></i>收入</span><span><i class="cyan-dot"></i>支出</span></div>
+              <div class="chart-wrap" id="cashflow-chart"></div>
+            </article>
+
+            <article class="panel todo-panel">
+              <div class="panel-header">
+                <div><h2>待办事项</h2><p>需要你关注的工作</p></div>
+                <button class="text-button">全部待办</button>
+              </div>
+              <div id="todo-list"></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid lower-grid finance-sensitive" id="dashboard-finance-lower">
+            <article class="panel">
+              <div class="panel-header">
+                <div><h2>高风险应收</h2><p>按逾期金额排序</p></div>
+                <button class="text-button" data-go="receivables">全部应收</button>
+              </div>
+              <div class="compact-table" id="risk-receivables"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div><h2>最近资金动态</h2><p>今日账户变动</p></div>
+                <button class="text-button" data-go="cashflow">查看流水</button>
+              </div>
+              <div class="activity-list" id="recent-activities"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="view-waybills" data-view-panel="waybills">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">运输业务</p><h1>运单管理</h1><p>统一管理运输委托、货物、线路、司机与结算状态。</p></div>
+            <div class="heading-actions"><button class="secondary-button" data-action="export-waybills">⇩ 导出</button><button class="primary-button" data-action="create-waybill">＋ 新建运单</button></div>
+          </div>
+          <div class="metric-grid compact-metrics" id="waybill-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar">
+              <div class="tab-bar" id="waybill-tabs"><button class="active" data-waybill-tab="all">全部</button><button data-waybill-tab="待调度">待调度</button><button data-waybill-tab="运输中">运输中</button><button data-waybill-tab="已签收">已签收</button><button data-waybill-tab="已结算">已结算</button></div>
+              <label class="inline-search"><span>⌕</span><input id="waybill-search" type="search" placeholder="搜索运单、客户、路线"></label>
+            </div>
+            <div class="table-scroll"><table><thead><tr><th>运单信息</th><th>客户</th><th>路线</th><th>货物</th><th>司机/车辆</th><th id="waybill-finance-column">收入/成本</th><th>状态</th><th>操作</th></tr></thead><tbody id="waybill-table-body"></tbody></table></div>
+            <div class="table-footer"><span id="waybill-result-count">共 0 条记录</span><span id="waybill-sync-note">数据变更实时同步应收、应付与利润</span></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-dispatch" data-view-panel="dispatch">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">运输业务</p><h1>调度中心</h1><p>快速完成待调度运单派车，并持续跟踪在途节点。</p></div>
+            <button class="primary-button" data-action="smart-dispatch">智能推荐车辆</button>
+          </div>
+          <div class="metric-grid compact-metrics" id="dispatch-metrics"></div>
+          <div class="dispatch-board">
+            <article class="panel dispatch-column"><div class="dispatch-column-head"><div><strong>待调度</strong><span id="dispatch-pending-count">0</span></div><small>等待安排车辆</small></div><div id="dispatch-pending-list"></div></article>
+            <article class="panel dispatch-column"><div class="dispatch-column-head"><div><strong>运输中</strong><span id="dispatch-transit-count">0</span></div><small>正在执行运输</small></div><div id="dispatch-transit-list"></div></article>
+            <article class="panel dispatch-column"><div class="dispatch-column-head"><div><strong>已签收</strong><span id="dispatch-signed-count">0</span></div><small>等待回单或结算</small></div><div id="dispatch-signed-list"></div></article>
+          </div>
+        </section>
+
+        <section class="view" id="view-pod" data-view-panel="pod">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">运输业务</p><h1>签收与回单</h1><p>跟踪签收证明、异常签收和纸质回单流转。</p></div>
+            <button class="secondary-button" data-action="batch-remind-pod">批量催回单</button>
+          </div>
+          <div class="metric-grid compact-metrics" id="pod-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部</button><button>待签收</button><button>已签收</button><button>异常签收</button><button>回单逾期</button></div><label class="inline-search"><span>⌕</span><input type="search" placeholder="搜索运单、客户、签收人"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>运单信息</th><th>客户/路线</th><th>签收信息</th><th>签收状态</th><th>回单状态</th><th>操作</th></tr></thead><tbody id="pod-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-fleet" data-view-panel="fleet">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">运输业务 / 运力</p><h1>车辆与车队</h1><p>车辆独立建档，司机按每次调度任务选择，不建立固定绑定关系。</p></div>
+            <div class="heading-actions"><button class="secondary-button" data-action="create-team">＋ 新增车队</button><button class="primary-button" data-action="create-vehicle">＋ 新增车辆</button></div>
+          </div>
+          <div class="metric-grid compact-metrics" id="fleet-metrics"></div>
+          <div class="fleet-grid">
+            <article class="panel table-panel">
+              <div class="table-toolbar"><div class="tab-bar"><button class="active">全部车辆</button><button>自有车辆</button><button>车队车辆</button><button>空闲</button><button>运输中</button></div><label class="inline-search"><span>⌕</span><input id="vehicle-search" type="search" placeholder="搜索车牌、车型、车队"></label></div>
+              <div class="table-scroll"><table><thead><tr><th>车辆</th><th>车型</th><th>车长</th><th>核载</th><th>归属</th><th>当前任务司机</th><th>状态</th><th>操作</th></tr></thead><tbody id="vehicle-table-body"></tbody></table></div>
+            </article>
+            <aside class="panel team-panel"><div class="panel-header"><div><h2>合作车队</h2><p>按车队管理可调度车辆池</p></div></div><div id="team-list"></div></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-receivables" data-view-panel="receivables">
+          <div class="page-heading heading-with-action">
+            <div>
+              <p class="eyebrow">财务中心 / 应收</p>
+              <h1>应收管理</h1>
+              <p>跟踪客户账款、到期风险与收款核销。</p>
+            </div>
+            <div class="heading-actions">
+              <button class="secondary-button" data-action="export-receivables">⇩ 导出</button>
+              <button class="primary-button" data-action="create-receivable">＋ 新增应收</button>
+            </div>
+          </div>
+
+          <div class="metric-grid compact-metrics" id="receivable-metrics"></div>
+
+          <article class="panel table-panel">
+            <div class="table-toolbar">
+              <div class="tab-bar" id="receivable-tabs">
+                <button class="active" data-receivable-tab="all">全部 <b id="tab-count-all">0</b></button>
+                <button data-receivable-tab="pending">待收款</button>
+                <button data-receivable-tab="partial">部分收款</button>
+                <button data-receivable-tab="overdue">已逾期</button>
+                <button data-receivable-tab="paid">已结清</button>
+              </div>
+              <div class="filter-row">
+                <label class="inline-search"><span>⌕</span><input id="receivable-search" type="search" placeholder="搜索客户/账单/运单"></label>
+                <select id="receivable-aging">
+                  <option value="all">全部账龄</option>
+                  <option value="current">未到期</option>
+                  <option value="1-30">逾期1—30天</option>
+                  <option value="31-60">逾期31—60天</option>
+                  <option value="60+">逾期60天以上</option>
+                </select>
+                <button class="filter-button" id="clear-receivable-filters">重置</button>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>账单信息</th>
+                    <th>客户</th>
+                    <th>应收金额</th>
+                    <th>已收 / 未收</th>
+                    <th>到期日</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="receivable-table-body"></tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span id="receivable-result-count">共 0 条记录</span>
+              <div class="pagination"><button disabled>‹</button><button class="active">1</button><button>2</button><button>›</button></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-payables" data-view-panel="payables">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">财务中心 / 应付</p><h1>应付管理</h1><p>集中管理司机、车队与承运商结算。</p></div>
+            <div class="heading-actions"><button class="secondary-button" data-action="export-payables">⇩ 导出</button><button class="primary-button" data-action="create-payable">＋ 新增应付</button></div>
+          </div>
+          <div class="metric-grid compact-metrics" id="payable-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar">
+              <div class="tab-bar"><button class="active">全部应付</button><button>待审核</button><button>待付款</button><button>已付款</button></div>
+              <label class="inline-search"><span>⌕</span><input id="payable-search" type="search" placeholder="搜索承运商/司机/结算单"></label>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>结算单</th><th>收款方</th><th>费用类型</th><th>应付金额</th><th>计划付款</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody id="payable-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-collections" data-view-panel="collections">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">财务中心 / 回款</p><h1>回款管理</h1><p>从待收账款发起回款登记，并自动完成资金核销。</p></div>
+            <div class="heading-actions"><button class="secondary-button" data-action="export-receivables">⇩ 导出</button><button class="primary-button" data-action="create-flow">＋ 登记无来源收款</button></div>
+          </div>
+          <div class="metric-grid compact-metrics" id="collection-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部</button><button>待收</button><button>部分回款</button><button>已结清</button><button>仅看逾期</button></div><label class="inline-search"><span>⌕</span><input id="collection-search" type="search" placeholder="搜索客户、运单、账单"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>账单/运单</th><th>客户</th><th>应收</th><th>已收</th><th>待收</th><th>到期日</th><th>状态</th><th>操作</th></tr></thead><tbody id="collection-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-payments" data-view-panel="payments">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">财务中心 / 付款</p><h1>付款管理</h1><p>处理司机、车队和承运商付款及核销。</p></div>
+            <button class="primary-button" data-action="batch-payment">批量付款</button>
+          </div>
+          <div class="metric-grid compact-metrics" id="payment-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部</button><button>待付款</button><button>部分付款</button><button>已结清</button></div><label class="inline-search"><span>⌕</span><input type="search" placeholder="搜索司机、承运商、结算单"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>结算单</th><th>收款方</th><th>应付</th><th>已付</th><th>待付</th><th>计划付款</th><th>状态</th><th>操作</th></tr></thead><tbody id="payment-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-reconciliation" data-view-panel="reconciliation">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">财务中心 / 对账</p><h1>对账中心</h1><p>按客户与账期汇总运单，跟踪确认金额和差异。</p></div>
+            <button class="primary-button" data-action="create-reconciliation">＋ 新建对账单</button>
+          </div>
+          <div class="metric-grid compact-metrics" id="reconciliation-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部</button><button>草稿</button><button>已发送</button><button>已确认</button><button>已结清</button></div><label class="inline-search"><span>⌕</span><input type="search" placeholder="搜索对账单、客户"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>对账单号</th><th>客户</th><th>账期</th><th>运单数</th><th>账单金额</th><th>确认金额</th><th>差额</th><th>状态</th><th>操作</th></tr></thead><tbody id="reconciliation-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-costs" data-view-panel="costs">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">财务中心 / 费用</p><h1>费用管理</h1><p>记录油费、路桥、维修、装卸等运营费用并归集业务。</p></div>
+            <button class="primary-button" data-action="create-cost">＋ 登记费用</button>
+          </div>
+          <div class="metric-grid compact-metrics" id="cost-metrics"></div>
+          <div class="cost-type-grid" id="cost-type-grid"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部费用</button><button>待审核</button><button>已入账</button></div><label class="inline-search"><span>⌕</span><input type="search" placeholder="搜索司机、运单、凭证"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>日期</th><th>申请人/司机</th><th>关联运单</th><th>类型</th><th>金额</th><th>地点</th><th>凭证</th><th>状态</th></tr></thead><tbody id="cost-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-cashflow" data-view-panel="cashflow">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">财务中心 / 资金</p><h1>资金流水</h1><p>掌握账户余额、收支变化与未认领流水。</p></div>
+            <div class="heading-actions"><button class="secondary-button" data-action="import-flow">导入银行流水</button><button class="primary-button" data-action="create-flow">＋ 记一笔</button></div>
+          </div>
+          <div class="account-grid" id="account-grid"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar">
+              <div class="tab-bar"><button class="active">全部流水</button><button>收入</button><button>支出</button><button>待认领 <b>2</b></button></div>
+              <label class="inline-search"><span>⌕</span><input type="search" placeholder="搜索摘要、对方账户"></label>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>交易时间</th><th>资金账户</th><th>交易摘要</th><th>关联业务</th><th>收支金额</th><th>核销状态</th></tr></thead>
+                <tbody id="cashflow-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-invoices" data-view-panel="invoices">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">业务管理 / 发票</p><h1>发票管理</h1><p>统一查看销项、进项和票款匹配情况。</p></div>
+            <div class="heading-actions"><button class="secondary-button">发票查验</button><button class="primary-button" data-action="create-invoice">＋ 申请开票</button></div>
+          </div>
+          <div class="metric-grid compact-metrics" id="invoice-metrics"></div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部发票</button><button>待开票</button><button>已开票</button><button>进项待收</button></div></div>
+            <div class="table-scroll"><table><thead><tr><th>发票申请</th><th>购方/销方</th><th>类型</th><th>价税合计</th><th>申请日期</th><th>状态</th><th>操作</th></tr></thead><tbody id="invoice-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-customers" data-view-panel="customers">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">业务管理 / 客户</p><h1>客户档案</h1><p>管理客户信用、账期、合同与经营贡献。</p></div>
+            <button class="primary-button" data-action="create-customer">＋ 新增客户</button>
+          </div>
+          <div class="customer-toolbar"><label class="inline-search wide"><span>⌕</span><input id="customer-search" type="search" placeholder="搜索客户名称、联系人"></label><select><option>全部客户等级</option><option>A级客户</option><option>B级客户</option></select></div>
+          <div class="customer-grid" id="customer-grid"></div>
+        </section>
+
+        <section class="view" id="view-reports" data-view-panel="reports">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">经营分析</p><h1>经营报表</h1><p>从客户、线路和账款结构理解经营质量。</p></div>
+            <div class="heading-actions"><select><option>2026年7月</option><option>2026年6月</option></select><button class="secondary-button">导出完整报表</button></div>
+          </div>
+          <div class="metric-grid" id="report-metrics"></div>
+          <div class="report-grid">
+            <article class="panel"><div class="panel-header"><div><h2>客户收入贡献</h2><p>本月收入Top 5</p></div></div><div id="customer-bar-chart" class="bar-chart"></div></article>
+            <article class="panel"><div class="panel-header"><div><h2>应收账龄结构</h2><p>余额 ¥582,600</p></div></div><div id="aging-donut" class="donut-layout"></div></article>
+          </div>
+          <article class="panel"><div class="panel-header"><div><h2>线路经营表现</h2><p>按本月贡献利润排序</p></div></div><div class="table-scroll"><table><thead><tr><th>线路</th><th>运单量</th><th>收入</th><th>直接成本</th><th>毛利</th><th>毛利率</th><th>趋势</th></tr></thead><tbody id="route-report-body"></tbody></table></div></article>
+        </section>
+
+        <section class="view" id="view-settings" data-view-panel="settings">
+          <div class="page-heading"><p class="eyebrow">系统</p><h1>系统设置</h1><p>配置企业信息、账务规则、提醒和数据。</p></div>
+          <div class="settings-layout">
+            <nav class="settings-nav"><button class="active">企业信息</button><button>账务规则</button><button>审批流程</button><button>消息提醒</button><button>成员与权限</button><button>数据与备份</button></nav>
+            <article class="panel settings-panel">
+              <h2>企业信息</h2><p>这些信息将用于账单、对账单和打印模板。</p>
+              <form class="settings-form" id="settings-form">
+                <label>企业名称<input value="榭尔物流有限公司"></label>
+                <div class="form-grid"><label>统一社会信用代码<input value="91310000MA1234567X"></label><label>默认账期<select><option>月结30天</option><option>月结15天</option><option>现结</option></select></label></div>
+                <div class="form-grid"><label>联系电话<input value="021-6888 1000"></label><label>财务邮箱<input value="finance@huadong-express.cn"></label></div>
+                <label>企业地址<input value="上海市嘉定区物流大道88号"></label>
+                <label>高德地图 Web 服务 Key（可选）<input id="amap-web-key" name="amapWebKey" type="password" autocomplete="off" placeholder="配置后可将高德坐标反查为省、市、区县和详细地址"><small class="field-help">仅保存在当前浏览器，用于高德分享链接的地理编码；纯文字地址无需配置。</small></label>
+                <div class="form-actions"><button type="button" class="secondary-button" data-action="reset-demo">恢复演示数据</button><button type="submit" class="primary-button">保存设置</button></div>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="view-recycle" data-view-panel="recycle">
+          <div class="page-heading heading-with-action">
+            <div><p class="eyebrow">系统 / 数据</p><h1>回收站</h1><p>查看最近删除的业务单据，可恢复或按权限彻底清除。</p></div>
+            <button class="secondary-button" data-action="empty-recycle">清空回收站</button>
+          </div>
+          <article class="panel table-panel">
+            <div class="table-toolbar"><div class="tab-bar"><button class="active">全部</button><button>运单</button><button>账单</button><button>费用</button></div></div>
+            <div class="table-scroll"><table><thead><tr><th>单据类型</th><th>单据编号</th><th>摘要</th><th>删除人</th><th>删除时间</th><th>剩余保留</th><th>操作</th></tr></thead><tbody><tr><td><span class="status draft">运单</span></td><td class="cell-title">WB202607180021</td><td>测试客户 · 上海→苏州</td><td>管理员</td><td>2026-07-28 14:32</td><td>29天</td><td><button class="row-action primary" data-action="restore-record">恢复</button></td></tr></tbody></table></div>
+          </article>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <section class="modal small-modal finance-auth-modal" id="finance-auth-modal" role="dialog" aria-modal="true" aria-labelledby="finance-auth-modal-title">
+    <div class="modal-header">
+      <div><p class="eyebrow">财务专属验证</p><h2 id="finance-auth-modal-title">登录财务中心</h2></div>
+      <button class="icon-button" data-close-modal>×</button>
+    </div>
+    <div class="finance-auth-intro"><span>¥</span><div><strong>敏感财务数据已锁定</strong><p>验证后才可使用应收、应付、收付款、对账、费用、流水、发票和财务报表。</p></div></div>
+    <form id="finance-auth-form">
+      <label>财务专属密钥<input name="financeKey" id="finance-key-input" type="password" autocomplete="current-password" required placeholder="请输入财务专属密钥"></label>
+      <p class="finance-auth-error" id="finance-auth-error" role="alert"></p>
+      <label class="finance-session-note"><input type="checkbox" checked disabled> 仅授权当前浏览器会话，关闭页面后自动失效</label>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">验证并进入财务中心</button></div>
+    </form>
+  </section>
+
+  <section class="modal" id="receivable-modal" role="dialog" aria-modal="true" aria-labelledby="receivable-modal-title">
+    <div class="modal-header"><div><p class="eyebrow">新建业务</p><h2 id="receivable-modal-title">新增应收</h2></div><button class="icon-button" data-close-modal>×</button></div>
+    <form id="receivable-form">
+      <div class="form-grid">
+        <label>客户名称<input name="customer" required placeholder="例如：上海星链商贸"></label>
+        <label>关联运单<input name="waybill" required placeholder="例如：YD20260728001"></label>
+      </div>
+      <div class="form-grid">
+        <label>应收金额<input name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></label>
+        <label>到期日期<input name="dueDate" type="date" required></label>
+      </div>
+      <label>费用说明<textarea name="note" rows="3" placeholder="运输费、提货费等"></textarea></label>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">保存应收</button></div>
+    </form>
+  </section>
+
+  <section class="modal small-modal" id="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+    <div class="modal-header"><div><p class="eyebrow">资金核销</p><h2 id="payment-modal-title">登记收款</h2></div><button class="icon-button" data-close-modal>×</button></div>
+    <form id="payment-form">
+      <input type="hidden" name="receivableId">
+      <div class="payment-context" id="payment-context"></div>
+      <label>本次收款金额<input name="paymentAmount" type="number" min="0.01" step="0.01" required></label>
+      <label>收款账户<select name="account"><option>招商银行 · 8890</option><option>建设银行 · 1028</option><option>微信商户账户</option></select></label>
+      <label>收款日期<input name="paymentDate" type="date" required></label>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">确认收款并核销</button></div>
+    </form>
+  </section>
+
+  <section class="modal waybill-modal-wide" id="waybill-modal" role="dialog" aria-modal="true" aria-labelledby="waybill-modal-title">
+    <div class="modal-header"><div><p class="eyebrow">运输委托</p><h2 id="waybill-modal-title">新建运单</h2></div><button class="icon-button" data-close-modal>×</button></div>
+    <form id="waybill-form">
+      <div class="smart-import-grid">
+        <section class="smart-import-card sender-import">
+          <div class="smart-import-head">
+            <div><strong>发货信息识别</strong><small>只填写发货方和装货地址</small></div>
+            <span>起点</span>
+          </div>
+          <textarea id="smart-sender-info" rows="4" placeholder="粘贴发货信息或高德分享内容：地点名称、地址、联系人、电话、分享链接均可"></textarea>
+          <div class="smart-import-actions">
+            <small id="sender-import-result">粘贴后自动识别发货人、电话和装货地址</small>
+            <div class="smart-import-buttons"><button type="button" class="secondary-button amap-import-button" data-action="amap-fill-sender">高德地址导入</button><button type="button" class="primary-button" data-action="smart-fill-sender">识别发货信息</button></div>
+          </div>
+        </section>
+        <section class="smart-import-card receiver-import">
+          <div class="smart-import-head">
+            <div><strong>收货信息识别</strong><small>只填写收货方和卸货地址</small></div>
+            <span>终点</span>
+          </div>
+          <textarea id="smart-receiver-info" rows="4" placeholder="粘贴收货信息或高德分享内容：地点名称、地址、联系人、电话、分享链接均可"></textarea>
+          <div class="smart-import-actions">
+            <small id="receiver-import-result">粘贴后自动识别收货人、电话和卸货地址</small>
+            <div class="smart-import-buttons"><button type="button" class="secondary-button amap-import-button" data-action="amap-fill-receiver">高德地址导入</button><button type="button" class="primary-button" data-action="smart-fill-receiver">识别收货信息</button></div>
+          </div>
+        </section>
+      </div>
+      <div class="import-strip">
+        <label>已保存客户<select id="common-customer-select"><option value="">选择已保存客户</option></select></label>
+        <button type="button" class="secondary-button" data-action="import-customer">带入已保存资料</button>
+      </div>
+      <label>客户名称<input name="customer" required placeholder="请输入客户名称或发货公司"></label>
+      <div class="form-grid"><label>发货联系人<input name="senderContact" required placeholder="姓名"></label><label>发货联系电话<input name="senderPhone" required placeholder="手机或座机"></label></div>
+      <fieldset class="address-fieldset">
+        <legend>起点（精确到区县）</legend>
+        <div class="region-grid"><label>省/直辖市<select id="origin-province" required></select></label><label>城市<select id="origin-city" required></select></label><label>区/县<select id="origin-district" name="originDistrict" required></select></label></div>
+        <label>详细装货地址<input name="originAddress" required placeholder="道路、园区、门牌号"></label>
+      </fieldset>
+      <div class="distance-result">
+        <span>自动里程</span>
+        <strong id="distance-value">请选择完整起点和终点</strong>
+        <small id="distance-note">系统自动估算后仍可人工确认；未匹配坐标时请手填</small>
+        <label class="distance-mileage-input">确认里程（km）<input name="distance" type="number" min="1" placeholder="自动或手填"></label>
+      </div>
+      <fieldset class="address-fieldset">
+        <legend>终点（精确到区县）</legend>
+        <div class="region-grid"><label>省/直辖市<select id="destination-province" required></select></label><label>城市<select id="destination-city" required></select></label><label>区/县<select id="destination-district" name="destinationDistrict" required></select></label></div>
+        <label>详细卸货地址<input name="destinationAddress" required placeholder="道路、园区、门牌号"></label>
+      </fieldset>
+      <div class="form-grid"><label>收货联系人<input name="receiverContact" required placeholder="姓名"></label><label>收货联系电话<input name="receiverPhone" required placeholder="手机或座机"></label></div>
+      <fieldset class="address-fieldset">
+        <legend>货物信息</legend>
+        <div class="form-grid"><label>货物名称<input name="cargo" required placeholder="例如：电子元器件"></label><label>包装方式<input name="packaging" placeholder="例如：纸箱/托盘"></label></div>
+        <div class="cargo-detail-grid"><label>件数<input name="pieces" type="number" min="0" placeholder="件"></label><label>重量（吨）<input name="weight" type="number" min="0" step="0.01" placeholder="吨"></label><label>体积（m³）<input name="volume" type="number" min="0" step="0.01" placeholder="m³"></label><label>声明价值<input name="declaredValue" type="number" min="0" placeholder="元"></label></div>
+      </fieldset>
+      <div class="form-grid"><label>承运方式<select name="carrierMode" id="carrier-mode"><option value="自有车辆">自有车辆</option><option value="合作车队">合作车队</option><option value="临时外请">临时外请</option></select></label><label>所属车队<select name="team" id="waybill-team-select"><option value="">不指定车队</option></select></label></div>
+      <div class="optional-assignment-grid">
+        <section class="optional-assignment-card">
+          <div class="optional-assignment-head"><div><strong>司机信息</strong><small>非必填，未填写不显示在运单上</small></div><button type="button" class="secondary-button" data-toggle-assignment="driver">＋ 填写司机信息</button></div>
+          <div class="optional-assignment-empty" id="driver-assignment-empty">暂不安排司机，可在调度时补充。</div>
+          <div class="optional-assignment-fields" id="driver-assignment-fields" hidden>
+            <label>填写方式<select name="driverEntryMode" id="driver-entry-mode"><option value="existing">选择已有司机</option><option value="new">录入新司机</option></select></label>
+            <div id="existing-driver-fields"><label>已有司机<select name="existingDriver" id="waybill-driver-select"></select></label></div>
+            <div class="compact-form-grid" id="new-driver-fields" hidden><label>司机姓名<input name="newDriverName" placeholder="姓名"></label><label>联系电话<input name="newDriverPhone" placeholder="手机号"></label><label>驾驶证类型<select name="newDriverLicense"><option>A2</option><option>B2</option><option>C1</option></select></label><label class="inline-check"><input name="saveNewDriver" type="checkbox" checked> 保存到司机档案</label></div>
+          </div>
+        </section>
+        <section class="optional-assignment-card">
+          <div class="optional-assignment-head"><div><strong>车辆信息</strong><small>非必填，未填写不显示在运单上</small></div><button type="button" class="secondary-button" data-toggle-assignment="vehicle">＋ 填写车辆信息</button></div>
+          <div class="optional-assignment-empty" id="vehicle-assignment-empty">暂不安排车辆，可在调度时补充。</div>
+          <div class="optional-assignment-fields" id="vehicle-assignment-fields" hidden>
+            <label>填写方式<select name="vehicleEntryMode" id="vehicle-entry-mode"><option value="existing">选择已有车辆</option><option value="new">录入新车辆</option></select></label>
+            <div id="existing-vehicle-fields"><label>已有车辆<select name="existingVehicle" id="waybill-vehicle-select"></select></label></div>
+            <div class="compact-form-grid" id="new-vehicle-fields" hidden><label>车牌号<input name="newVehiclePlate" placeholder="例如：沪A·12345"></label><label>车型<select name="newVehicleType"><option>厢式货车</option><option>高栏货车</option><option>平板货车</option><option>冷藏车</option></select></label><label>车长（米）<select name="newVehicleLength"><option>4.2</option><option>6.8</option><option>9.6</option><option>13.0</option><option>17.5</option></select></label><label class="inline-check"><input name="saveNewVehicle" type="checkbox" checked> 保存到车辆档案</label></div>
+          </div>
+        </section>
+      </div>
+      <div class="waybill-finance-locked-note" id="waybill-finance-locked-note" hidden><span>🔒</span><div><strong>财务费用暂不填写</strong><small>当前为普通运输模式，可先开具运单；财务人员验证专属密钥后再处理费用与结算。</small></div></div>
+      <fieldset class="address-fieldset" id="waybill-finance-fieldset">
+        <legend>费用与交付</legend>
+        <div class="cargo-detail-grid"><label>基础运费<input name="freight" type="number" min="0" value="0"></label><label>保险费<input name="insuranceFee" type="number" min="0" value="0"></label><label>装卸费<input name="loadingFee" type="number" min="0" value="0"></label><label>上楼费<input name="upstairsFee" type="number" min="0" value="0"></label></div>
+        <div class="form-grid"><label>其他费用<input name="otherFee" type="number" min="0" value="0"></label><label>承运成本<input name="cost" type="number" min="0" value="0"></label></div>
+        <div class="form-grid"><label>付款方式<select name="paymentMethod"><option>已付</option><option>到付</option><option selected>欠付</option></select></label><label>结算方式<select name="settlementMethod"><option>现金</option><option>转账</option><option selected>月结</option></select></label></div>
+        <div class="form-grid"><label>交付方式<select name="deliveryMethod"><option selected>送货</option><option>自提</option></select></label><div class="charge-total"><span>客户应付合计</span><strong id="waybill-charge-total">¥0</strong></div></div>
+      </fieldset>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">保存并开具运单</button></div>
+    </form>
+  </section>
+
+  <section class="modal small-modal" id="vehicle-modal" role="dialog" aria-modal="true" aria-labelledby="vehicle-modal-title">
+    <div class="modal-header"><div><p class="eyebrow">车辆档案</p><h2 id="vehicle-modal-title">新增车辆</h2></div><button class="icon-button" data-close-modal>×</button></div>
+    <form id="vehicle-form">
+      <div class="form-grid"><label>车牌号<input name="plate" required placeholder="例如：沪A·12345"></label><label>车辆来源<select name="source"><option>自有车辆</option><option>车队车辆</option><option>临时外请</option></select></label></div>
+      <div class="form-grid"><label>车型<select name="type"><option>厢式货车</option><option>高栏货车</option><option>平板货车</option><option>冷藏车</option><option>集装箱车</option></select></label><label>车长（米）<select name="length"><option>4.2</option><option>6.8</option><option>7.6</option><option>9.6</option><option>13.0</option><option>17.5</option></select></label></div>
+      <div class="form-grid"><label>核载（吨）<input name="capacity" type="number" min="0" step="0.1" required></label><label>所属车队<select name="team" id="vehicle-team-select"><option value="">公司自有/无车队</option></select></label></div>
+      <p class="form-hint">车辆不绑定固定司机；创建运单或调度时再选择本次任务司机。</p>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">保存车辆</button></div>
+    </form>
+  </section>
+
+  <section class="modal print-preview-modal" id="triplicate-modal" role="dialog" aria-modal="true" aria-labelledby="triplicate-modal-title">
+    <div class="modal-header no-print"><div><p class="eyebrow">运输凭证</p><h2 id="triplicate-modal-title">物流运输三联单</h2></div><button class="icon-button" data-close-modal>×</button></div>
+    <div class="triplicate-toolbar no-print">
+      <span>可以单独打印任意一联，也可以一次打印全部三联。</span>
+      <div class="triplicate-print-actions">
+        <button class="secondary-button" type="button" data-print-copy="1">只打客户联</button>
+        <button class="secondary-button" type="button" data-print-copy="2">只打司机联</button>
+        <button class="secondary-button" type="button" data-print-copy="3">只打记账联</button>
+        <button class="primary-button" type="button" id="print-triplicate">打印全部三联</button>
+      </div>
+    </div>
+    <div id="triplicate-content" class="triplicate-content"></div>
+  </section>
+
+  <section class="modal small-modal" id="cost-modal" role="dialog" aria-modal="true" aria-labelledby="cost-modal-title">
+    <div class="modal-header"><div><p class="eyebrow">运营费用</p><h2 id="cost-modal-title">登记费用</h2></div><button class="icon-button" data-close-modal>×</button></div>
+    <form id="cost-form">
+      <div class="form-grid"><label>费用类型<select name="type"><option>油费</option><option>过路费</option><option>维修费</option><option>装卸费</option><option>其他</option></select></label><label>金额<input name="amount" type="number" min="0.01" required></label></div>
+      <label>关联运单<input name="waybill" placeholder="可选，如 WB20260728001"></label>
+      <div class="form-grid"><label>申请人/司机<input name="driver" required></label><label>发生地点<input name="location" required></label></div>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">保存费用</button></div>
+    </form>
+  </section>
+
+  <aside class="detail-drawer" id="detail-drawer">
+    <div class="drawer-header"><div><p class="eyebrow">应收详情</p><h2 id="drawer-title">账单详情</h2></div><button class="icon-button" id="close-drawer">×</button></div>
+    <div id="drawer-content"></div>
+  </aside>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+  <script src="app.js?v=2026072929"></script>
+</body>
+</html>
